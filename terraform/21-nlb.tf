@@ -1,4 +1,5 @@
 resource "aws_lb" "blue" {
+  name               = "blue-green-nlb"
   internal           = true
   load_balancer_type = "network"
   subnets            = module.vpc.private_subnets

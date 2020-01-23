@@ -10,11 +10,11 @@ resource "aws_launch_template" "blue" {
 
 resource "aws_autoscaling_group" "blue" {
   vpc_zone_identifier       = module.vpc.private_subnets
-  max_size                  = 5
-  min_size                  = 2
-  health_check_grace_period = 300
-  health_check_type         = "EC2"
-  desired_capacity          = 2
+  max_size                  = 15
+  min_size                  = 4
+  health_check_grace_period = 60
+  health_check_type         = "ELB"
+  desired_capacity          = 4
   force_delete              = true
   wait_for_capacity_timeout = 0
   launch_template {

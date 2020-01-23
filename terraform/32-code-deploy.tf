@@ -4,10 +4,11 @@ resource "aws_codedeploy_app" "green" {
 }
 
 resource "aws_codedeploy_deployment_group" "green" {
-  app_name              = aws_codedeploy_app.green.name
-  deployment_group_name = "green-group"
-  service_role_arn      = aws_iam_role.codedeploy.arn
-  autoscaling_groups    = [aws_autoscaling_group.blue.id]
+  app_name               = aws_codedeploy_app.green.name
+  deployment_group_name  = "green-group"
+  deployment_config_name = "CodeDeployDefault.AllAtOnce"
+  service_role_arn       = aws_iam_role.codedeploy.arn
+  autoscaling_groups     = [aws_autoscaling_group.blue.id]
 
   deployment_style {
     deployment_option = "WITH_TRAFFIC_CONTROL"
@@ -15,15 +16,14 @@ resource "aws_codedeploy_deployment_group" "green" {
   }
 
   load_balancer_info {
-    elb_info {
-      name = aws_lb.blue.name
+    target_group_info {
+      name = aws_lb_target_group.blue.name
     }
   }
 
   blue_green_deployment_config {
     deployment_ready_option {
-      action_on_timeout    = "STOP_DEPLOYMENT"
-      wait_time_in_minutes = 60
+      action_on_timeout = "CONTINUE_DEPLOYMENT"
     }
 
     green_fleet_provisioning_option {
